@@ -12,5 +12,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Find out which directory this is in
-      run: ls
+    - name: Install Black
+      run: pip install black
+    - name: Run Black checker
+      run: black --check portal/
