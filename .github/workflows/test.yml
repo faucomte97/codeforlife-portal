@@ -18,4 +18,4 @@ jobs:
     - name: Install Black
       run: pip install black
     - name: Run Black checker
-      run: black --check --diff portal/
+      run: black --check --diff --exclude=portal/__init__.py portal
