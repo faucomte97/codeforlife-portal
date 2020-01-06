@@ -1,4 +1,4 @@
-name: Run Black linter
+name: Black
 
 on:
   pull_request:
@@ -18,4 +18,4 @@ jobs:
     - name: Install Black
       run: pip install black==19.3b0
     - name: Run Black checker
-      run: black --check --diff --exclude=portal/__init__.py portal
+      run: black --check --diff --exclude=portal/__init__.py .
