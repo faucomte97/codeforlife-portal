@@ -7,19 +7,18 @@ from django.core.cache import cache
 
 from ratelimit.backends import BaseBackend
 
-CACHE_PREFIX = 'rl:'
+CACHE_PREFIX = "rl:"
 MAX_LIFETIME = 60 * 60 * 24
 
 
 def make_safe(unicode_string):
     h = hashlib.md5()
-    bytes_string = unicode_string.encode('utf_8')
+    bytes_string = unicode_string.encode("utf_8")
     h.update(bytes_string)
     return h.hexdigest()
 
 
 class CacheBackend(BaseBackend):
-
     def increment(self, name, periods):
         name = make_safe(CACHE_PREFIX + name)
         lifetime = max(periods)
@@ -41,4 +40,7 @@ class CacheBackend(BaseBackend):
             cache.set(name, timestamps, lifetime)
 
         # count timestamps in the periods we're investigating
-        return [len(timestamps) - bisect_left(timestamps, time.time() - period) for period in periods]
+        return [
+            len(timestamps) - bisect_left(timestamps, time.time() - period)
+            for period in periods
+        ]

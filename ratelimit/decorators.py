@@ -4,13 +4,9 @@ from functools import wraps
 
 from ratelimit.backends.cache import CacheBackend
 
-PERIODS = {
-    's': 1,
-    'm': 60,
-    'h': 60 * 60,
-}
+PERIODS = {"s": 1, "m": 60, "h": 60 * 60}
 
-period_re = re.compile('([\d]*)([smh])')
+period_re = re.compile("([\d]*)([smh])")
 
 
 def decode_period(period):
@@ -19,6 +15,7 @@ def decode_period(period):
     if multi:
         time = time * int(multi)
     return time
+
 
 backend = CacheBackend()
 
@@ -30,29 +27,33 @@ backend = CacheBackend()
 # increment - a function to decide whether to count this request towards the rate limiting
 
 
-def ratelimit(tag, label=None, labeller=None, path=True, ip=True, periods=[], increment=None):
+def ratelimit(
+    tag, label=None, labeller=None, path=True, ip=True, periods=[], increment=None
+):
     def decorator(fn):
         decoded_periods = map(decode_period, periods)
 
         @wraps(fn)
         def wrapped(request, *args, **kwargs):
-            name = ''
+            name = ""
             if label is not None:
                 name = label
             elif labeller is not None and callable(labeller):
                 name = labeller(request)
-            
-            if path:
-                name = request.path + ':' + name
-            if ip:
-                name = request.META['REMOTE_ADDR'] + ':' + name
 
-            request.limits = getattr(request, 'limits', {})
+            if path:
+                name = request.path + ":" + name
+            if ip:
+                name = request.META["REMOTE_ADDR"] + ":" + name
+
+            request.limits = getattr(request, "limits", {})
             request.limits[tag] = backend.limits(name, decoded_periods)
 
             response = fn(request, *args, **kwargs)
 
-            if increment is None or (callable(increment) and increment(request, response)):
+            if increment is None or (
+                callable(increment) and increment(request, response)
+            ):
                 backend.increment(name, decoded_periods)
 
             return response

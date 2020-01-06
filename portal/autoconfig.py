@@ -147,7 +147,7 @@ RELATIONSHIPS = [
         "django_otp.middleware.OTPMiddleware",
         after=["django.contrib.auth.middleware.AuthenticationMiddleware"],
         add_missing=False,
-    ),
+    )
 ]
 
 try:
