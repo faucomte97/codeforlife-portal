@@ -16,6 +16,6 @@ jobs:
       with:
         python-version: '3.6.x'
     - name: Install Black
-      run: pip install black
+      run: pip install black==19.3b0
     - name: Run Black checker
       run: black --check --diff --exclude=portal/__init__.py portal
